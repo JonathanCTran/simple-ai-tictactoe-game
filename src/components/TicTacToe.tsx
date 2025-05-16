@@ -69,11 +69,11 @@ const TicTacToe = () => {
       
       if (winner === 'X') {
         setScores(prev => ({ ...prev, x: prev.x + 1 }));
-        // If X wins, whoever was playing as X should remain as X (no change needed)
+        // X wins - no change to player1IsX (winner stays as X)
         toast.success(player1IsX ? 'Player 1 wins!' : 'Player 2 wins!');
       } else if (winner === 'O') {
         setScores(prev => ({ ...prev, o: prev.o + 1 }));
-        // If O wins, they should become X in the next game (flip the assignment)
+        // O wins - flip player1IsX (winner becomes X in next game)
         setPlayer1IsX(!player1IsX);
         toast.success(player1IsX ? 'Player 2 wins!' : 'Player 1 wins!');
       } else if (isDraw) {
