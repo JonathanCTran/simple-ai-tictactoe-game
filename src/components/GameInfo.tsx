@@ -28,7 +28,7 @@ const GameInfo = ({ status, xScore, oScore, draws, currentPlayer }: GameInfoProp
         <div className="text-center">
           <div className="flex items-center justify-center">
             <X className="text-game-x-color w-5 h-5 mr-1" />
-            <span className="font-medium">Player 1:</span>
+            <span className="font-medium">Score:</span>
           </div>
           <p className="text-xl font-bold">{xScore}</p>
         </div>
@@ -43,7 +43,7 @@ const GameInfo = ({ status, xScore, oScore, draws, currentPlayer }: GameInfoProp
         <div className="text-center">
           <div className="flex items-center justify-center">
             <Circle className="text-game-o-color w-5 h-5 mr-1" />
-            <span className="font-medium">Player 2:</span>
+            <span className="font-medium">Score:</span>
           </div>
           <p className="text-xl font-bold">{oScore}</p>
         </div>
