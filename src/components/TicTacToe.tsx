@@ -26,6 +26,7 @@ const TicTacToe = () => {
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.AI);
   const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.MEDIUM);
   const [gameOver, setGameOver] = useState<boolean>(false);
+  const [player1IsX, setPlayer1IsX] = useState<boolean>(true); // Keep track of which player is X
 
   const current = history[stepNumber];
   const winner = checkWinner(current.squares);
@@ -34,11 +35,17 @@ const TicTacToe = () => {
   // Game status
   let status: string;
   if (winner) {
-    status = `Winner: ${winner}`;
+    const winnerText = player1IsX ? 
+      (winner === 'X' ? 'Player 1 wins!' : 'Player 2 wins!') :
+      (winner === 'X' ? 'Player 2 wins!' : 'Player 1 wins!');
+    status = `Winner: ${winnerText}`;
   } else if (isDraw) {
     status = "It's a draw!";
   } else {
-    status = `Next player: ${xIsNext ? 'X' : 'O'}`;
+    const nextPlayerText = player1IsX ?
+      (xIsNext ? 'Player 1' : 'Player 2') :
+      (xIsNext ? 'Player 2' : 'Player 1');
+    status = `Next player: ${nextPlayerText}`;
   }
 
   // Handle AI moves
@@ -62,16 +69,22 @@ const TicTacToe = () => {
       
       if (winner === 'X') {
         setScores(prev => ({ ...prev, x: prev.x + 1 }));
-        toast.success('Player X wins!');
+        // Player who wins gets to be X in the next game
+        setPlayer1IsX(player1IsX);
+        toast.success(player1IsX ? 'Player 1 wins!' : 'Player 2 wins!');
       } else if (winner === 'O') {
         setScores(prev => ({ ...prev, o: prev.o + 1 }));
-        toast.success('Player O wins!');
+        // Player who wins gets to be X in the next game
+        setPlayer1IsX(!player1IsX);
+        toast.success(player1IsX ? 'Player 2 wins!' : 'Player 1 wins!');
       } else if (isDraw) {
         setScores(prev => ({ ...prev, draws: prev.draws + 1 }));
+        // In case of a draw, switch players
+        setPlayer1IsX(!player1IsX);
         toast.info("It's a draw!");
       }
     }
-  }, [winner, isDraw]);
+  }, [winner, isDraw, player1IsX]);
 
   const handleClick = (i: number) => {
     const historyCopy = history.slice(0, stepNumber + 1);
@@ -97,11 +110,14 @@ const TicTacToe = () => {
     setStepNumber(0);
     setXIsNext(true);
     setGameOver(false);
+    // Note: We don't reset player1IsX here, as it should persist between games
   };
 
   const handleGameModeChange = (mode: GameMode) => {
     setGameMode(mode);
     startNewGame();
+    // Reset player assignments when changing game mode
+    setPlayer1IsX(true);
   };
 
   const handleDifficultyChange = (diff: Difficulty) => {
